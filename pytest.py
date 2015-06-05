@@ -4,7 +4,7 @@ import fcntl
 import os
 import struct
 
-samples = 100
+samples = 50
 
 I2C_SLAVE = 0x0703
 i2cdevfd = os.open('/dev/i2c-1', os.O_RDWR)
@@ -27,6 +27,21 @@ def readDistance():
 #    print repr(val)
     return (struct.unpack('>H', val)[0], time.time() - start)
 
+def avg(vals):
+    return sum(vals) / float(len(vals))
+
+
+def process(vals):
+    foo = vals[:]
+    av = avg(foo)
+    for each in foo:
+        if (av+1) < each:
+           foo.remove(each)
+        if (av-1) > each:
+           foo.remove(each)
+
+    return avg(foo)
+
 start = time.time()
 idx = 0
 values = [0] * samples
@@ -35,5 +50,6 @@ while True:
     idx += 1
     if idx == samples:
         idx = 0
-        print sum(values) / float(samples), time.time() - start
-        start = time.time()
+        print round(process(values)), '\t', round(avg(values))
+#        print sum(values) / float(samples), time.time() - start
+#        start = time.time()
