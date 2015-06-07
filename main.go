@@ -9,7 +9,9 @@ var I2CBusPath	string = "/dev/i2c-1"
 var SensorAddr	int = 0x62
 
 func main() {
-	i2c := new(I2cBus)
-	fmt.Println("Test")
+	i2c, err := NewI2cBus(I2CBusPath)
+	if err != nil {
+        panic(err)
+    }
+    fmt.Println(i2c)
 }
-
