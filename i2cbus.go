@@ -4,15 +4,17 @@ import (
 	"syscall"
 )
 
+var I2C_SLAVE int = 0x0703
+
 type I2cBus struct {
 	devfd	int
 	devpath	string
 }
 
-func NewI2cBus(dev string) (I2cBus, error) {
+func NewI2cBus(dev string) (*I2cBus, error) {
 	i2c := &I2cBus{devpath: dev}
 	err := i2c.Open()
-	return *i2c, err
+	return i2c, err
 }
 
 func (self *I2cBus) Open() error {
