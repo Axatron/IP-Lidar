@@ -28,6 +28,19 @@ func (self I2cBus) SetAddr(addr int) error {
 	return syscall.Errno(errno)
 }
 
+func (self I2cBus) WriteRegister(reg byte, data []byte) (int, error) {
+	data = append([]byte{reg}, data...)
+	return self.Write(data)
+}
+
+func (self I2cBus) ReadRegister(reg byte, buf []byte) (int, error) {
+	len, err := self.Write([]byte{reg})
+	if err != nil {
+		return len, err
+	}
+	return self.Read(buf)
+}
+
 func (self I2cBus) Write(buf []byte) (int, error) {
 	return syscall.Write(self.devfd, buf)
 }
