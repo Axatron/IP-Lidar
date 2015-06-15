@@ -1,6 +1,11 @@
 package main
 
+import (
+	"syscall"
+)
+
 var SensorAddr int = 0x62
+var max_iofaults int = 50
 
 type LidarSensor struct {
 	i2cAddr int
@@ -22,9 +27,27 @@ func (self LidarSensor) ReadDistance() (uint16, error) {
 	buf := make([]byte, 2)
 
 	self.bus.WriteRegister(0x00, []byte{0x04})
-	_, err := self.bus.ReadRegister(0x8f, buf)
-	if err != nil {
-		return uint16(0), err
+
+	iofaults := 0
+	for {
+		_, err := self.bus.ReadRegister(0x8f, buf)
+		if err != nil {
+			errno, ok := err.(syscall.Errno)
+			if (!ok) {
+				return uint16(0), err
+			}
+			if (errno == 5) {
+				iofaults += 1
+				if iofaults > max_iofaults {
+					return uint16(0), err
+				}
+				continue
+			} else {
+				return uint16(0), err
+			}
+		} else {
+			break
+		}
 	}
 
 	result = (uint16(buf[0]) << 8) + uint16(buf[1])
