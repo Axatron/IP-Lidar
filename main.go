@@ -17,5 +17,9 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Println(sensor.ReadDistance())
+	distance, err := sensor.ReadDistance()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(distance)
 }
