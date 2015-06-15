@@ -25,7 +25,10 @@ func (self *I2cBus) Open() error {
 
 func (self I2cBus) SetAddr(addr int) error {
 	_, _, errno := syscall.Syscall(syscall.SYS_IOCTL, uintptr(self.devfd), uintptr(I2C_SLAVE), uintptr(addr))
-	return syscall.Errno(errno)
+	if errno != 0 {
+		return syscall.Errno(errno)
+	}
+	return nil
 }
 
 func (self I2cBus) WriteRegister(reg byte, data []byte) (int, error) {

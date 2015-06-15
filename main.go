@@ -17,5 +17,5 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Println(sensor.i2cAddr)
+	fmt.Println(sensor.ReadDistance())
 }

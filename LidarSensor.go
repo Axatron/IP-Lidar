@@ -17,14 +17,14 @@ func NewLidarSensor(i2cbus *I2cBus) (*LidarSensor, error) {
 	return sensor, nil
 }
 
-func (self LidarSensor) ReadDistance(buf []byte) (uint16, error) {
+func (self LidarSensor) ReadDistance() (uint16, error) {
 	var result uint16
-	buf = make([]byte, 2)
+	buf := make([]byte, 2)
 
 	self.bus.WriteRegister(0x00, []byte{0x04})
 	_, err := self.bus.ReadRegister(0x8f, buf)
 	if err != nil {
-		panic(err)
+		return uint16(0), err
 	}
 
 	result = (uint16(buf[0]) << 8) + uint16(buf[1])
