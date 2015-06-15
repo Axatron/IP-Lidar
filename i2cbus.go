@@ -37,9 +37,9 @@ func (self I2cBus) WriteRegister(reg byte, data []byte) (int, error) {
 }
 
 func (self I2cBus) ReadRegister(reg byte, buf []byte) (int, error) {
-	len, err := self.Write([]byte{reg})
+	size, err := self.Write([]byte{reg})
 	if err != nil {
-		return len, err
+		return size, err
 	}
 	return self.Read(buf)
 }
