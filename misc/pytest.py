@@ -4,7 +4,7 @@ import fcntl
 import os
 import struct
 
-samples = 50
+samples = 101
 
 I2C_SLAVE = 0x0703
 i2cdevfd = os.open('/dev/i2c-1', os.O_RDWR)
@@ -28,21 +28,41 @@ def readDistance():
     return (struct.unpack('>H', val)[0], time.time() - start)
 
 def avg(vals):
-    return sum(vals) / float(len(vals))
+    return sum(vals) / len(vals)
 
 
-def process(vals):
-    foo = vals[:]
-    av = avg(foo)
-    for each in foo:
-        if (av+1) < each:
-           foo.remove(each)
-        if (av-1) > each:
-           foo.remove(each)
+def mode(vals):
+    v = {}
+    for val in vals:
+        if val not in v:
+            v[val] = 1
+        else:
+            v[val] += 1
 
-    return avg(foo)
+    results = sorted(v, key=lambda x: v[x], reverse = True)
+    if results[0] == results[1]:
+        print "DUP"
+    return results[0]
 
-start = time.time()
+def median(vals):
+    v = vals[:]
+    v.sort()
+    return v[samples/2]
+
+def midrange(vals):
+    return (min(vals) + max(vals)) / 2
+#def process(vals):
+#    foo = vals[:]
+#    av = avg(foo)
+#    for each in foo:
+#        if (av+1) < each:
+#           foo.remove(each)
+#        if (av-1) > each:
+#           foo.remove(each)
+#
+#    return avg(foo)
+
+#start = time.time()
 idx = 0
 values = [0] * samples
 while True:
@@ -50,6 +70,6 @@ while True:
     idx += 1
     if idx == samples:
         idx = 0
-        print round(process(values)), '\t', round(avg(values))
-#        print sum(values) / float(samples), time.time() - start
-#        start = time.time()
+#        print round(process(values)), '\t', round(avg(values))
+        print avg(values), '\t', mode(values), '\t', median(values), '\t', midrange(values), '\t', min(values), '\t', max(values)
+
