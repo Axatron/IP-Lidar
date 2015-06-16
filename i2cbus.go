@@ -4,7 +4,7 @@ import (
 	"syscall"
 )
 
-var I2C_SLAVE int = 0x0703
+const I2C_SLAVE = 0x0703
 
 type I2cBus struct {
 	devfd   int
