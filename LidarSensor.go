@@ -50,6 +50,6 @@ func (self LidarSensor) ReadDistance() (uint16, error) {
 		}
 	}
 
-	result = (uint16(buf[0]) << 8) + uint16(buf[1])
+	result = uint16(buf[0]) << 8 | uint16(buf[1])
 	return result, nil
 }

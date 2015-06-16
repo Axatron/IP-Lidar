@@ -4,7 +4,16 @@ import (
 	"syscall"
 )
 
-const I2C_SLAVE = 0x0703
+const (
+	I2C_RETRIES = iota + 0x0701
+	I2C_TIMEOUT
+	I2C_SLAVE
+	I2C_TENBIT
+	I2C_FUNCS
+	I2C_SLAVE_FORCE
+	I2C_RDWR
+	I2C_PEC
+)
 
 type I2cBus struct {
 	devfd   int
