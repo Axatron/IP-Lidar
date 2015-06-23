@@ -64,12 +64,15 @@ def midrange(vals):
 
 #start = time.time()
 idx = 0
+count = 0
 values = [0] * samples
 while True:
     values[idx], eltime = readDistance()
     idx += 1
     if idx == samples:
         idx = 0
+        count += 1
+        if count == 1000: break
 #        print round(process(values)), '\t', round(avg(values))
         print avg(values), '\t', mode(values), '\t', median(values), '\t', midrange(values), '\t', min(values), '\t', max(values)
 
