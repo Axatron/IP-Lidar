@@ -17,11 +17,14 @@ func main() {
 		panic(err)
 	}
 
+	samples := NewSamples(11)
 	for {
 		distance, err := sensor.ReadDistance()
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println(distance)
+		samples.AddValue(distance)
+		fmt.Println(samples)
+		fmt.Println(samples.Mode())
 	}
 }
