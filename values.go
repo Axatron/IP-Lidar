@@ -41,8 +41,7 @@ func (self *Samples) Mode() (uint16) {
 
 	for k, v := range values {
 		if v > max {
-			best = k
-			max = v
+			best, max = k, v
 		}
 	}
 	return best
