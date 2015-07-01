@@ -17,7 +17,7 @@ func NewSamples(length int) (*Samples) {
 	return samp
 }
 
-func (self *Samples) Total() (uint) {
+func (self *Samples) Sum() (uint) {
 	var total uint = 0
 	for _, i := range self.samps {
 		total += uint(i)
@@ -26,7 +26,7 @@ func (self *Samples) Total() (uint) {
 }
 
 func (self *Samples) Avg() (uint16) {
-	bar := float64(self.Total()) / float64(self.length)
+	bar := float64(self.Sum()) / float64(self.length)
 	return uint16(math.Floor(bar + 0.5))
 }
 
@@ -36,12 +36,7 @@ func (self *Samples) Mode() (uint16) {
 	var best uint16
 
 	for _, i := range self.samps {
-		_, ok := values[i]
-		if !ok {
-			values[i] = 1
-		} else {
-			values[i] += 1
-		}
+		values[i]++
 	}
 
 	for k, v := range values {
