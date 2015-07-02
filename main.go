@@ -25,6 +25,7 @@ func main() {
 		}
 		samples.AddValue(distance)
 		fmt.Println(samples)
-		fmt.Println(samples.Mode())
+		fmt.Println(samples.Sorted())
+		fmt.Println(samples.Midrange())
 	}
 }

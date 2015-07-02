@@ -2,7 +2,13 @@ package main
 
 import (
 	"math"
+	"sort"
 )
+
+type SamplesSlice []uint16
+func (p SamplesSlice) Len() int           { return len(p) }
+func (p SamplesSlice) Less(i, j int) bool { return p[i] < p[j] }
+func (p SamplesSlice) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
 
 type Samples struct {
 	idx	int
@@ -17,6 +23,14 @@ func NewSamples(length int) (*Samples) {
 	return samp
 }
 
+func (self *Samples) Sorted() ([]uint16) {
+	temp := make([]uint16, self.length)
+	copy(temp, self.samps)
+	sort.Stable(SamplesSlice(temp))
+	return temp
+}
+
+
 func (self *Samples) Sum() (uint) {
 	var total uint = 0
 	for _, i := range self.samps {
@@ -25,7 +39,7 @@ func (self *Samples) Sum() (uint) {
 	return total
 }
 
-func (self *Samples) Avg() (uint16) {
+func (self *Samples) Mean() (uint16) {
 	bar := float64(self.Sum()) / float64(self.length)
 	return uint16(math.Floor(bar + 0.5))
 }
@@ -45,6 +59,16 @@ func (self *Samples) Mode() (uint16) {
 		}
 	}
 	return best
+}
+
+func (self *Samples) Median() (uint16) {
+	sorted := self.Sorted()
+	return sorted[self.length / 2]
+}
+
+func (self *Samples) Midrange() (uint16) {
+	sorted := self.Sorted()
+	return (sorted[0] + sorted[self.length-1]) / 2
 }
 
 func (self *Samples) AddValue(val uint16) {
